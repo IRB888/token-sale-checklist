@@ -16,3 +16,21 @@ test('legacy checklist migrates with only known unique checks',()=>{const v=D.mi
 test('portfolio keeps currencies separate and excludes archives',()=>{const s=D.summary([p(),{...p(),currency:'EUR'},{...p(),archived:true}]);assert.equal(s.USDC.count,1);assert.equal(s.EUR.budget,300000);assert.equal(Object.keys(s).length,2);});
 test('portfolio does not offset one project funding gap against another excess',()=>{const s=D.summary([p(),{...p(),deposited:'1000',refunded:'0'}]);assert.equal(s.USDC.excess,90000);assert.equal(s.USDC.due,100000);assert.equal(s.USDC.held,390000);});
 test('portfolio empty and maximum supported amounts stay exact',()=>{assert.equal(Object.keys(D.summary([])).length,0);const s=D.summary(Array(50).fill({...p(),budget:'999999999999.99'}));assert.equal(s.USDC.budget,4999999999999950);assert.ok(Number.isSafeInteger(s.USDC.budget));});
+
+// Small DOM/storage fixture for executing the real app event handlers, without dependencies.
+function appFixture(){
+ const nodes=new Map(),listeners={},values=new Map();let failWrite=false;
+ const node=id=>{if(!nodes.has(id))nodes.set(id,{id,value:'',style:{},dataset:{},disabled:false,textContent:'',innerHTML:'',files:[],addEventListener(){},setAttribute(){},after(){},append(){},focus(){},click(){},querySelectorAll(){return [];}});return nodes.get(id);};
+ const storage={getItem:k=>values.get(k)??null,setItem(k,v){if(failWrite)throw Error('quota');values.set(k,v);}};
+ const env={URL,TextEncoder,Intl,Date,AbortController,setTimeout,clearTimeout,setInterval(){},console,crypto:{randomUUID:()=> 'new-id'},confirm:()=>true,localStorage:storage,
+ document:{getElementById:node,documentElement:{},createElement:tag=>node('created-'+nodes.size),querySelectorAll:()=>[...nodes.values()]},
+ window:{addEventListener:(name,cb)=>listeners[name]=cb}};
+ // Translation queries must return only actual translated nodes (none in this fixture).
+ env.document.querySelectorAll=selector=>selector==='[data-t]'?[]:[...nodes.values()];
+ vm.createContext(env);for(const script of scripts)vm.runInContext(script[1],env);
+ return {env,node,storage,values,listeners,failWrites(){failWrite=true;},read:code=>vm.runInContext(code,env)};
+}
+function storageEvent(f,key,area=f.storage){f.listeners.storage({key,storageArea:area});}
+test('storage clear locks project edits but unrelated session events do not',()=>{const f=appFixture();storageEvent(f,'sale-planner:v2',{});assert.equal(f.read('blocked'),false);storageEvent(f,null);assert.equal(f.read('blocked'),true);assert.equal(f.node('newProject').disabled,true);assert.equal(f.node('exportBackup').disabled,false);});
+test('an import finishing after another tab writes cannot change the workspace',async()=>{const f=appFixture();let finish;const input=f.node('importFile');input.files=[{size:100,text:()=>new Promise(resolve=>finish=resolve)}];const pending=input.onchange({target:input});storageEvent(f,'sale-planner:v2');const warning=f.node('message').textContent;finish(JSON.stringify({version:2,projects:[p()]}));await pending;assert.equal(f.read('projects.length'),0);assert.equal(f.values.size,0);assert.equal(f.node('message').textContent,warning);});
+test('import storage failure remains visible and imported data can be exported',async()=>{const f=appFixture();f.failWrites();const input=f.node('importFile');input.files=[{size:100,text:async()=>JSON.stringify({version:2,projects:[p()]})}];await input.onchange({target:input});assert.equal(f.read('projects.length'),1);assert.equal(f.node('message').textContent,f.read("t('storage')"));assert.equal(f.values.size,0);});
