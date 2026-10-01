@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Token Sale Checklist</title><style>body{font:17px/1.6 system-ui,sans-serif;background:#101827;color:#eaf0ff;margin:0}main{max-width:820px;margin:50px auto;padding:24px}h1{line-height:1.15}h2{font-size:1.2rem}label{display:block;margin:18px 0}input,select,button{font:inherit;border-radius:8px;padding:10px;border:1px solid #637187;background:#19263b;color:inherit}input[type=number]{display:block;width:calc(100% - 24px)}button{cursor:pointer;margin:8px 8px 8px 0}button:hover{background:#304766}.card{background:#19263b;padding:20px;border-radius:14px;margin:20px 0}.muted{color:#aebcd2}output{font-size:1.5rem;font-weight:700}a{color:#9ac5ff}input[type=checkbox]{margin-right:12px}progress{width:100%;height:20px}small{display:block}</style></head><body><main><p class="muted">Local planning · no wallet connection</p><h1>Token sale checklist</h1><p>A personal checklist for reviewing a sale's requirements before acting. Confirm the project's current terms: some sales require a deposit with the application, while others collect payment later.</p><label>Project name<input id="project" maxlength="120" placeholder="Project name"></label><p id="storage" class="muted"></p><progress id="progress" max="10" value="0" aria-label="Checklist completion"></progress><p id="summary" aria-live="polite"></p><section class="card" id="checks"></section><button id="export">Export checklist</button><button id="reset">Reset checklist</button><h2>Before you start</h2><p>Use official project links. Verify token, network, deadlines, deposit timing, allocation rules, vesting and refund conditions. Completing this checklist does not establish eligibility or guarantee an allocation.</p><p class="muted">Progress is stored only in this browser when local storage is available. Do not enter passwords, recovery phrases or private keys. No analytics, external scripts or network requests are used.</p></main><script>
+const items=[
+ ['official','I verified the official sale URL and project identity.'],
+ ['eligibility','I checked eligibility, country restrictions and required verification.'],
+ ['deadline','I recorded the application deadline, timezone and payment deadline.'],
+ ['timing','I checked whether the application requires an upfront deposit.'],
+ ['asset','I confirmed the exact payment token and blockchain network.'],
+ ['budget','I decided my maximum budget and checked fees separately.'],
+ ['terms','I reviewed allocation, cancellation, refund and vesting terms.'],
+ ['address','I checked the receiving address in the official interface.'],
+ ['wallet','I checked token balance and native-token gas balance if needed.'],
+ ['records','I saved the application status, transaction records and refund deadline.']
+];
+const key='token-sale-checklist:v1';
+let state={project:'',checked:[]};
+try { const saved=JSON.parse(localStorage.getItem(key)); if(saved && typeof saved.project==='string' && Array.isArray(saved.checked)) state={project:saved.project.slice(0,120),checked:saved.checked.filter(id=>items.some(x=>x[0]===id))}; } catch (_) {}
+const project=document.querySelector('#project'); project.value=state.project;
+const checks=document.querySelector('#checks');
+for(const [id,text] of items){
+ const label=document.createElement('label'), input=document.createElement('input');
+ input.type='checkbox';input.value=id;input.checked=state.checked.includes(id);
+ input.addEventListener('change',save);label.append(input,document.createTextNode(text));checks.append(label);
+}
+function update(){ const n=checks.querySelectorAll('input:checked').length;document.querySelector('#progress').value=n;document.querySelector('#summary').textContent=`${n} of ${items.length} checks complete`; }
+function save(){state={project:project.value,checked:[...checks.querySelectorAll('input:checked')].map(e=>e.value)};try{localStorage.setItem(key,JSON.stringify(state));document.querySelector('#storage').textContent='Saved in this browser.';}catch(_){document.querySelector('#storage').textContent='Browser storage unavailable. Export to keep your checklist.';}update();}
+project.addEventListener('input',save);
+document.querySelector('#reset').addEventListener('click',()=>{if(!confirm('Clear the project name and all checks?'))return;project.value='';checks.querySelectorAll('input').forEach(e=>e.checked=false);save();});
+document.querySelector('#export').addEventListener('click',()=>{const text='# Token sale checklist\n\nProject: '+project.value+'\nExported: '+new Date().toISOString()+'\n\n'+items.map(([id,label])=>'['+(state.checked.includes(id)?'x':' ')+'] '+label).join('\n');const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='token-sale-checklist.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+update();
+</script></body></html>
