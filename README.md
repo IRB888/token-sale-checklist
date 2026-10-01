@@ -4,6 +4,10 @@ A bilingual, private workspace for token-sale research, checklists, deadlines an
 
 **[Open the app](https://irb888.github.io/token-sale-checklist/)** · [Report a bug](https://github.com/IRB888/token-sale-checklist/issues)
 
+## Version 2.1
+
+- Portfolio totals for active projects, grouped separately by currency. Shows planned budget, deposits less refunds, excess and funding gaps. Gaps and excess are calculated per project without netting; archived projects are excluded.
+
 ## Version 2.0
 
 - Up to 50 projects with search, active/archive views and reversible archiving.
