@@ -4,6 +4,11 @@ A bilingual, private workspace for token-sale research, checklists, deadlines an
 
 **[Open the app](https://irb888.github.io/token-sale-checklist/)** · [Report a bug](https://github.com/IRB888/token-sale-checklist/issues)
 
+## Version 2.2
+
+- Cross-tab protection now detects storage clearing as well as edits, and ignores unrelated session storage events.
+- An import still reading a file stops if another tab changes the workspace. A failed save keeps its storage warning instead of claiming that the import was saved.
+
 ## Version 2.1
 
 - Portfolio totals for active projects, grouped separately by currency. Shows planned budget, deposits less refunds, excess and funding gaps. Gaps and excess are calculated per project without netting; archived projects are excluded.
