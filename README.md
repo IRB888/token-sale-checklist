@@ -4,6 +4,10 @@ A bilingual, private workspace for token-sale research, checklists, deadlines an
 
 **[Open the app](https://irb888.github.io/token-sale-checklist/)** · [Report a bug](https://github.com/IRB888/token-sale-checklist/issues)
 
+## Version 2.4
+
+- Export every upcoming deadline from saved, open, non-archived projects in a single UTC calendar file. Past dates are excluded; the export is not limited to ten events. This is a snapshot, not automatic calendar synchronization.
+
 ## Version 2.3
 
 - Export all saved project records (including archives) to CSV with currency labels, UTC deadlines and spreadsheet-formula protection. CSV is for reporting; use JSON for restore.
