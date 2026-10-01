@@ -4,6 +4,15 @@ A bilingual, private workspace for token-sale research, checklists, deadlines an
 
 **[Open the app](https://irb888.github.io/token-sale-checklist/)** · [Report a bug](https://github.com/IRB888/token-sale-checklist/issues)
 
+## Version 2.3
+
+- Export all saved project records (including archives) to CSV with currency labels, UTC deadlines and spreadsheet-formula protection. CSV is for reporting; use JSON for restore.
+- See the next 10 application/refund deadlines across active, open projects and jump to the project. Past deadlines remain in project details.
+
+## Try it and report feedback
+
+Use made-up amounts and project names when testing. Report your browser/device, steps, expected and actual behavior through [the bug-report form](https://github.com/IRB888/token-sale-checklist/issues/new?template=bug_report.yml). Never attach real financial backups, credentials or identity documents. Suggestions should describe a real task the tool cannot complete.
+
 ## Version 2.2
 
 - Cross-tab protection now detects storage clearing as well as edits, and ignores unrelated session storage events.
