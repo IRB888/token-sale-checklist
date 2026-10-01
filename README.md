@@ -17,6 +17,16 @@ A bilingual, private workspace for token-sale research, checklists, deadlines an
 
 Use made-up amounts and project names when testing. Report your browser/device, steps, expected and actual behavior through [the bug-report form](https://github.com/IRB888/token-sale-checklist/issues/new?template=bug_report.yml). Never attach real financial backups, credentials or identity documents. Suggestions should describe a real task the tool cannot complete.
 
+### Five-minute usability check
+
+Use a separate browser profile or an empty workspace with fictional records. No application, payment, wallet or real financial data is needed.
+
+1. **Records:** create “Demo only” in USDC with planned budget 3000, deposit 1000, allocation 800 and completed refund 100. Save. Expected: deposit less refunds **900 USDC**, excess **100 USDC**, unfunded allocation **0 USDC**. Excess is a calculation, not a promised refund. Can you explain the figures?
+2. **Deadlines:** add an application deadline tomorrow, save and export all upcoming deadlines as .ics. Expected: the event represents your chosen local time using UTC in the file. Mark the project closed and save: it should disappear from upcoming deadlines and the next-24-hours counter. Calendar exports are snapshots; an already imported event is not automatically removed.
+3. **Recovery:** export a JSON backup, then import that same fictional backup. Expected: a second copy is added; the original remains. Archive one copy, then restore it from Archive. Switch RU/EN: amounts and project records should remain unchanged.
+
+Share the task number, browser/device, what you expected, what happened, and one confusing label through the bug-report link above. Attach only fictional records, never your real backup. Stars and follows are not requested. Checks by the project author or an AI assistant are separate from independent user feedback.
+
 ## Version 2.2
 
 - Cross-tab protection now detects storage clearing as well as edits, and ignores unrelated session storage events.
