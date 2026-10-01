@@ -4,6 +4,13 @@ A bilingual, private workspace for token-sale research, checklists, deadlines an
 
 **[Open the app](https://irb888.github.io/token-sale-checklist/)** · [Report a bug](https://github.com/IRB888/token-sale-checklist/issues)
 
+## Version 2.5
+
+- Compare the sale's required token/network with the token/network recorded in your wallet. Missing fields remain unchecked; token and network mismatches are shown separately.
+- Matching labels are not onchain verification: independently verify the official token contract, address, balances and gas. Network aliases are deliberately not guessed.
+- Wallet funding and token approval are explicitly distinguished from a confirmed sale deposit.
+- Optional fields survive JSON backups and appear in CSV exports. Existing version 2 backups load with blank fields; accounting currency is not assumed to be the payment token.
+
 ## Version 2.4
 
 - Export every upcoming deadline from saved, open, non-archived projects in a single UTC calendar file. Past dates are excluded; the export is not limited to ten events. This is a snapshot, not automatic calendar synchronization.
